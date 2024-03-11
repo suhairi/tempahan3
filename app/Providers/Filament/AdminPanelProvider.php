@@ -62,7 +62,8 @@ class AdminPanelProvider extends PanelProvider
             ->resources([
                 config('filament-logger.activity_resource'),
             ])
-            ->sidebarFullyCollapsibleOnDesktop()
+            ->sidebarCollapsibleOnDesktop()
+            // ->sidebarFullyCollapsibleOnDesktop()
             ->navigationGroups([
                 NavigationGroup::make('Booking Forms'),
                 NavigationGroup::make('Admin Management'),
@@ -71,7 +72,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make('Settings'),
             ])
             ->navigationItems([                
-                NavigationItem::make('Jadual Kelapangan')
+                NavigationItem::make('Availability Table')
                     ->icon('heroicon-o-table-cells')
                     ->group('Reports')
                     ->url('#', shouldOpenInNewTab: true),
@@ -84,7 +85,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
