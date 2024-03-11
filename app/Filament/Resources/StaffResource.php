@@ -48,14 +48,15 @@ class StaffResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('staff_id')
+                    ->label('Staff ID')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kod_gelaran_semasa')
                     ->label('Gelaran')
                     ->getStateUsing(function(Model $record, Gelaran $gelaran) {
                         $glrn = $gelaran->where('id', '=', $record->kod_gelaran_semasa)->first();
                         if(empty($glrn))
-                            return 'Encik';
-                        return $record->name;
+                            return 'Encik/Puan/Cik';
+                        return $glrn->name;
                     })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
@@ -89,8 +90,6 @@ class StaffResource extends Resource
                             return 'SIAM';
                         if($record->kod_bangsa == 'L')
                             return 'LAIN-LAIN';
-                        
-                        
                     })
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('kod_agama')

@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCarmodel extends CreateRecord
 {
     protected static string $resource = CarmodelResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
