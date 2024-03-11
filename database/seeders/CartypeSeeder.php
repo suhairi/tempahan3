@@ -15,6 +15,7 @@ class CartypeSeeder extends Seeder
     {
         $types = array(
             array('name' => 'SEDAN'),
+            array('name' => 'SUV'),
             array('name' => '4WD'),
             array('name' => 'PICKUP'),
             array('name' => 'VAN'),

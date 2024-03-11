@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Vehiclebooking extends Model
 {
@@ -21,7 +22,6 @@ class Vehiclebooking extends Model
         'filename', 
         'status',
         'cartype_id',
-        'approval_id',
         'driver_id',
     ];
 
@@ -35,9 +35,9 @@ class Vehiclebooking extends Model
         return $this->belongsTo(Cartype::class);
     }
 
-    public function approval(): BelongsTo
+    public function approval(): HasOne    
     {
-        return $this->belongsTo(Approval::class);
+        return $this->hasOne(Approval::class);
     }
 
     public function driver(): BelongsTo

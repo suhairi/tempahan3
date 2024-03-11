@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('staffid');
 
             $table->dateTime('start_date'); //tarikh mula guna kenderaan
-            $table->dateTime('start_event_date'); //tarikh kursus/mesyuarat/bengkel/kursus
+            $table->date('start_event_date'); //tarikh kursus/mesyuarat/bengkel/kursus
             $table->date('end_date'); // tarikh tamat guna kenderaan
 
             $table->string('filepath')->nullable();
