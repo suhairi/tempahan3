@@ -64,6 +64,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->sidebarFullyCollapsibleOnDesktop()
             ->navigationGroups([
+                NavigationGroup::make('Booking Forms'),
                 NavigationGroup::make('Admin Management'),
                 NavigationGroup::make('Reports'),
                 NavigationGroup::make('System Management'),

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VehicleResource\Pages;
 use App\Filament\Resources\VehicleResource\RelationManagers;
+use App\Filament\Resources\VehicleResource\RelationManagers\DriverRelationManager;
 use App\Models\Carmodel;
 use App\Models\Vehicle;
 use Filament\Forms;
@@ -111,7 +112,7 @@ class VehicleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            DriverRelationManager::class,
         ];
     }
 
