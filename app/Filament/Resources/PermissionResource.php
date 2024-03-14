@@ -6,6 +6,8 @@ use App\Filament\Resources\PermissionResource\Pages;
 use App\Filament\Resources\PermissionResource\RelationManagers;
 use App\Models\Permission;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -35,12 +37,31 @@ class PermissionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('guard_name')
-                    ->required()
-                    ->maxLength(255),
+                    Section::make('Create Permission')
+                        ->description('Create permission')
+                        ->schema([
+                            Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('guard_name')
+                        ->default('web')
+                        ->readOnly()
+                        ->required()
+                        ->maxLength(10),
+                    Select::make('roles')
+                        ->label('Roles')
+                        ->relationship('roles', 'name')
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                                ->label('Permission Name')
+                                ->required()
+                                ->maxLength(255),
+                        ])
+                        ->multiple()
+                        ->searchable()
+                        ->preload() 
+                ])->columns(3),              
+                
             ]);
     }
 

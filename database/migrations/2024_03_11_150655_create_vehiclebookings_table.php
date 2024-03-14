@@ -20,8 +20,7 @@ return new class extends Migration
             $table->date('start_event_date'); //tarikh kursus/mesyuarat/bengkel/kursus
             $table->date('end_date'); // tarikh tamat guna kenderaan
 
-            $table->string('filepath')->nullable();
-            $table->string('filename')->nullable();
+            $table->string('attachment')->nullable();
 
             $table->string('status'); // approval, processing, success, cancel
 

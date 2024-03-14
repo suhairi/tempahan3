@@ -43,43 +43,24 @@ class VehiclebookingResource extends Resource
                     Wizard\Step::make('Applicant Info')
                         ->schema([
                             Select::make('name')
-                            ->options(Staff::all()->pluck('nama', 'nama'))
-                            ->required()
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(function($state, $get, $set) {
-                                $staff = Staff::where('nama', '=', $state)->first();
-                                $set('staffid', $staff->staff_id);
-                            }),
-                        TextInput::make('staffid')
-                            ->readOnly()
-                            ->required()
-                            ->hidden()
-                            ->maxLength(255),
+                                ->options(Staff::all()->pluck('nama', 'nama'))
+                                ->required()
+                                ->searchable()
+                                ->preload()
+                                ->required()
+                                ->live()
+                                ->afterStateUpdated(function($state, $get, $set) {
+                                    $staff = Staff::where('nama', '=', $state)->first();
+                                    $set('staffid', $staff->staff_id);
+                                }),
+                            TextInput::make('staffid')
+                                ->readOnly()
+                                ->required()
+                                // ->hidden()
+                                ->maxLength(255),
                         ]),
                     Wizard\Step::make('Schedule Details')
                         ->schema([
-                            Section::make('Date And Time Request For The Vehicle')
-                                ->description('The date and time to start using the vehicle.')
-                                ->aside()
-                                ->schema([
-                                    DateTimePicker::make('start_date')
-                                    ->required()
-                                    ->columnSpanFull(),
-                                ]),
-                            Section::make('Events Related Date')
-                                ->description('The event start and end date.')
-                                ->aside()
-                                ->schema([
-                                    DatePicker::make('start_event_date')
-                                        ->label('Event Start Date')
-                                        ->required(),
-                                    DatePicker::make('end_date')
-                                        ->label('Event End Date')
-                                        ->required(),
-                                ]),
                             Section::make('Event Document')
                                 ->description('This document is compulsory to upload if the event take place outside of MADA territories.')
                                 ->aside()
@@ -88,31 +69,61 @@ class VehiclebookingResource extends Resource
                                         ->downloadable()
                                         ->acceptedFileTypes(['application/pdf'])
                                         ->maxSize(1000)
-                                        // ->uploadingMessage('Uploading attachment...')
                                         ->columnSpanFull(),
-                                    // TextInput::make('filepath')
-                                    //     ->maxLength(255),
-                                    // TextInput::make('filename')
-                                    //     ->maxLength(255),
                                 ]),
+                            Section::make('Date And Time Request For The Vehicle')
+                                ->description('The date and time to start using the vehicle.')
+                                ->aside()
+                                ->schema([
+                                    DateTimePicker::make('start_date')
+                                        ->label('Start Date')
+                                        ->after('today')
+                                        ->required()
+                                        ->columnSpanFull(),
+                                ]),
+                            Section::make('Events Related Date')
+                                ->description('The event start and end date.')
+                                ->aside()
+                                ->schema([
+                                    DatePicker::make('start_event_date')                                        
+                                        ->label('Event Start Date')
+                                        ->after('start_date')
+                                        ->required(),
+                                    DatePicker::make('end_date')
+                                        ->label('Event End Date')
+                                        ->afterOrEqual('start_event_date')
+                                        ->required(),
+                                ]),                            
                         ])->columns(2),
                     Wizard\Step::make('Vehicle And Driver')
                         ->schema([
                             TextInput::make('status')
                                 ->default('approval')
-                                ->hidden()
+                                ->readOnly()
+                                // ->hidden()
                                 ->required()
                                 ->maxLength(255),
+                            Select::make('approval name')
+                                ->label('The Applicant Supervisor.')
+                                ->relationship('approval.user', 'name')
+                                ->live()
+                                ->afterStateUpdated(function($state, $set, $get) {
+                                    $staff = Staff::where('nama', '=', $state)->first();
+                                    $set('approval_id', $staff->staff_id);
+                                })
+                                ->searchable()
+                                ->preload()
+                                ->required(),
+                            TextInput::make('approval.user_id')
+                                ->readOnly(),
+                        ]),
+                    Wizard\Step::make('Vehicle And Driver')
+                        ->schema([
                             Select::make('cartype_id')
                                 ->label('Car Type Request')
                                 ->relationship('cartype', 'name')
                                 ->required(),
-                            Select::make('approval_id')
-                                ->label('The Applicant Supervisor.')
-                                ->relationship('approval.user', 'name')
-                                ->searchable()
-                                ->preload()
-                                ->required(),
+                            
                             Select::make('driver_id')
                                 ->label('Driver to Request')
                                 ->relationship('driver', 'name')

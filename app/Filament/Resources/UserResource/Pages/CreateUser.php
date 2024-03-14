@@ -29,10 +29,9 @@ class CreateUser extends CreateRecord
 
         return Notification::make()
             ->success()
-            ->title('User registered in getCreatedNotification')
+            ->title('User registered : ' . $user->name)
             ->body('The user has been created successfully.')
-            ->sendToDatabase($user);
-        
-        
+            ->sendToDatabase(auth()->user());
+               
     }
 }
