@@ -54,10 +54,14 @@ class VehiclebookingResource extends Resource
                                     $set('staffid', $staff->staff_id);
                                 }),
                             TextInput::make('staffid')
-                                ->readOnly()
-                                ->required()
                                 // ->hidden()
-                                ->maxLength(255),
+                                ->maxLength(8),
+                            TextInput::make('user_id')
+                                ->default(auth()->user()->id)
+                                ->required()
+                                ->hidden()
+                                ->maxLength(8),
+                             
                         ]),
                     Wizard\Step::make('Schedule Details')
                         ->schema([
@@ -95,27 +99,20 @@ class VehiclebookingResource extends Resource
                                         ->required(),
                                 ]),                            
                         ])->columns(2),
-                    Wizard\Step::make('Vehicle And Driver')
+                    Wizard\Step::make('Approval Info')
                         ->schema([
-                            TextInput::make('status')
-                                ->default('approval')
-                                ->readOnly()
-                                // ->hidden()
-                                ->required()
-                                ->maxLength(255),
                             Select::make('approval name')
                                 ->label('The Applicant Supervisor.')
                                 ->relationship('approval.user', 'name')
                                 ->live()
                                 ->afterStateUpdated(function($state, $set, $get) {
-                                    $staff = Staff::where('nama', '=', $state)->first();
-                                    $set('approval_id', $staff->staff_id);
+                                    $set('approver_id', $state);
                                 })
                                 ->searchable()
                                 ->preload()
                                 ->required(),
-                            TextInput::make('approval.user_id')
-                                ->readOnly(),
+                            TextInput::make('approver_id')
+                                ->hidden(),
                         ]),
                     Wizard\Step::make('Vehicle And Driver')
                         ->schema([
@@ -130,7 +127,7 @@ class VehiclebookingResource extends Resource
                                 ->required()
                                 ->searchable()
                                 ->preload(),
-                        ]),
+                        ])->columns(2),
                 ])->columnSpanFull(),               
                 
                 
@@ -154,21 +151,8 @@ class VehiclebookingResource extends Resource
                 Tables\Columns\TextColumn::make('end_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('filepath')
+                Tables\Columns\TextColumn::make('attachment')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('filename')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('cartype.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('approval_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('driver.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

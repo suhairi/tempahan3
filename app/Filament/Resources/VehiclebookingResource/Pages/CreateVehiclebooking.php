@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateVehiclebooking extends CreateRecord
 {
     protected static string $resource = VehiclebookingResource::class;
+
+    protected function beforeSave() 
+    {
+        return $this->record;
+    }
 }

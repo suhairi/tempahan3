@@ -17,13 +17,14 @@ return new class extends Migration
             $table->string('staffid');
 
             $table->dateTime('start_date'); //tarikh mula guna kenderaan
-            $table->date('start_event_date'); //tarikh kursus/mesyuarat/bengkel/kursus
+            $table->date('start_event_date'); //tarikh mula kursus/mesyuarat/bengkel/kursus
             $table->date('end_date'); // tarikh tamat guna kenderaan
 
             $table->string('attachment')->nullable();
 
             $table->string('status'); // approval, processing, success, cancel
 
+            $table->foreignId('user_id'); // the clerk user_id whom fill in this form
             $table->foreignId('cartype_id'); // vehicle type to request
             $table->foreignId('approval_id');
             $table->foreignId('driver_id');

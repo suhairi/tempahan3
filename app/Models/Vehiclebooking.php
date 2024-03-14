@@ -14,13 +14,11 @@ class Vehiclebooking extends Model
 
     protected $fillable = [
         'name', 
-        'staffid', 
+        'staffid',
         'start_date',
         'start_event_date', 
         'end_date', 
-        'filepath', 
-        'filename', 
-        'status',
+        'sttachment', 
         'cartype_id',
         'driver_id',
     ];
