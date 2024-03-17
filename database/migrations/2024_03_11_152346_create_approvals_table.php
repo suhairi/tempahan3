@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('approvals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehiclebooking_id');
             $table->foreignId('user_id'); // approver
             $table->string('status'); // approve or disapprove or pending
             $table->timestamps();
