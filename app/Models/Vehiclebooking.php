@@ -18,8 +18,12 @@ class Vehiclebooking extends Model
         'start_date',
         'start_event_date', 
         'end_date', 
-        'sttachment', 
+        'attachment',
+        'destination',
+        'progress',
+        'user_id',
         'cartype_id',
+        'aprroval_id',
         'driver_id',
     ];
 
@@ -28,14 +32,19 @@ class Vehiclebooking extends Model
         return $this->hasMany(Passenger::class);
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function cartype(): BelongsTo
     {
         return $this->belongsTo(Cartype::class);
     }
 
-    public function approval(): HasOne    
+    public function approval(): BelongsTo    
     {
-        return $this->hasOne(Approval::class);
+        return $this->belongsTo(Approval::class);
     }
 
     public function driver(): BelongsTo

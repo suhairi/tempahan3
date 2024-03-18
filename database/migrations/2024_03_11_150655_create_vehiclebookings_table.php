@@ -19,14 +19,15 @@ return new class extends Migration
             $table->dateTime('start_date'); //tarikh mula guna kenderaan
             $table->date('start_event_date'); //tarikh mula kursus/mesyuarat/bengkel/kursus
             $table->date('end_date'); // tarikh tamat guna kenderaan
+            $table->string('destination'); // negeri acara tersebut
 
             $table->string('attachment')->nullable();
 
-            $table->string('status'); // approval, processing, success, cancel
+            $table->string('progress'); // new, processing, success, cancel
 
             $table->foreignId('user_id'); // the clerk user_id whom fill in this form
             $table->foreignId('cartype_id'); // vehicle type to request
-            $table->foreignId('approval_id');
+            $table->foreignId('approval_id')->nullable();
             $table->foreignId('driver_id');
 
             $table->softDeletes();

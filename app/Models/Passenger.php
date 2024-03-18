@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Passenger extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'staffid', 'vehiclebooking_id'];
+    protected $fillable = ['name', 'vehiclebooking_id'];
 
-    public function vehiclebooking(): BelongsTo
+    public function vehiclebooking(): HasOne
     {
-        return $this->belongsTo(Vehiclebooking::class);
+        return $this->hasOne(Vehiclebooking::class);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VehiclebookingResource\Pages;
 use App\Filament\Resources\VehiclebookingResource\RelationManagers;
-use App\Models\Role;
 use App\Models\Staff;
 use App\Models\User;
 use App\Models\Vehiclebooking;
@@ -12,124 +11,139 @@ use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Collection;
+use PHPUnit\TestRunner\TestResult\Collector;
 
 class VehiclebookingResource extends Resource
 {
     protected static ?string $model = Vehiclebooking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = 'Vehicle Form';
-    protected static ?string $pluralModelLabel = 'Vehicle Form';
-
-    protected static ?string $navigationGroup = 'Booking Forms';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationLabel = 'Vehicle Booking Form';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
 
-                Wizard::make([
-                    Wizard\Step::make('Applicant Info')
-                        ->schema([
-                            Select::make('name')
-                                ->options(Staff::all()->pluck('nama', 'nama'))
-                                ->required()
-                                ->searchable()
-                                ->preload()
-                                ->required()
-                                ->live()
-                                ->afterStateUpdated(function($state, $get, $set) {
-                                    $staff = Staff::where('nama', '=', $state)->first();
-                                    $set('staffid', $staff->staff_id);
-                                }),
-                            TextInput::make('staffid')
-                                // ->hidden()
-                                ->maxLength(8),
-                            TextInput::make('user_id')
-                                ->default(auth()->user()->id)
-                                ->required()
-                                ->hidden()
-                                ->maxLength(8),
-                             
+                Section::make('1 - Applicant Info')
+                ->description('')
+                ->collapsible(true)
+                ->schema([
+                    Forms\Components\Select::make('name')
+                        ->label('Applicant Name')
+                        ->required()
+                        ->options(Staff::query()->orderBy('nama', 'asc')->pluck('nama', 'nama'))
+                        ->searchable()
+                        ->preload()
+                        ->live()
+                        ->afterStateUpdated(function($state, $set){
+                            if(!empty($state))
+                            {
+                                $staff = Staff::where('nama', $state)->first();
+                                $set('staffid', $staff->staff_id);
+                            } else
+                                $set('staffid', '');
+                        })->columnSpanFull(),
+                ])->columns(2),
+
+                Section::make('2 - Event Info')
+                ->description('')
+                ->collapsible(true)
+                ->schema([
+                    DateTimePicker::make('start_date')
+                        ->minDate(now()->addDay()->subHour(2))
+                        ->required()
+                        ->native(false),
+                    DatePicker::make('start_event_date')
+                        ->afterOrEqual('start_date')
+                        ->required()
+                        ->native(false),
+                    DatePicker::make('end_date')
+                        ->afterOrEqual('start_event_date')
+                        ->required()
+                        ->native(false),
+                    Select::make('destination')
+                        ->options([
+                            'MADA' => 'Dalam Kawasan MADA',
+                            'Kuala Lumpur' => 'Kuala Lumpur',
+                            'Penang'    => 'Penang',
+                            'Perak'     => 'Perak',
+                            'Selangor'  => 'Selangor',
                         ]),
-                    Wizard\Step::make('Schedule Details')
-                        ->schema([
-                            Section::make('Event Document')
-                                ->description('This document is compulsory to upload if the event take place outside of MADA territories.')
-                                ->aside()
-                                ->schema([
-                                    FileUpload::make('attachment')
-                                        ->downloadable()
-                                        ->acceptedFileTypes(['application/pdf'])
-                                        ->maxSize(1000)
-                                        ->columnSpanFull(),
-                                ]),
-                            Section::make('Date And Time Request For The Vehicle')
-                                ->description('The date and time to start using the vehicle.')
-                                ->aside()
-                                ->schema([
-                                    DateTimePicker::make('start_date')
-                                        ->label('Start Date')
-                                        ->after('today')
-                                        ->required()
-                                        ->columnSpanFull(),
-                                ]),
-                            Section::make('Events Related Date')
-                                ->description('The event start and end date.')
-                                ->aside()
-                                ->schema([
-                                    DatePicker::make('start_event_date')                                        
-                                        ->label('Event Start Date')
-                                        ->after('start_date')
-                                        ->required(),
-                                    DatePicker::make('end_date')
-                                        ->label('Event End Date')
-                                        ->afterOrEqual('start_event_date')
-                                        ->required(),
-                                ]),                            
-                        ])->columns(2),
-                    Wizard\Step::make('Approval Info')
-                        ->schema([
-                            Select::make('approval name')
-                                ->label('The Applicant Supervisor.')
-                                ->relationship('approval.user', 'name')
-                                ->live()
-                                ->afterStateUpdated(function($state, $set, $get) {
-                                    $set('approver_id', $state);
-                                })
-                                ->searchable()
-                                ->preload()
-                                ->required(),
-                            TextInput::make('approver_id')
-                                ->hidden(),
-                        ]),
-                    Wizard\Step::make('Vehicle And Driver')
-                        ->schema([
-                            Select::make('cartype_id')
-                                ->label('Car Type Request')
-                                ->relationship('cartype', 'name')
-                                ->required(),
-                            
-                            Select::make('driver_id')
-                                ->label('Driver to Request')
-                                ->relationship('driver', 'name')
-                                ->required()
-                                ->searchable()
-                                ->preload(),
-                        ])->columns(2),
-                ])->columnSpanFull(),               
-                
+                ])->columns(3),
+
+                Section::make('3 - Supporting Document')
+                ->description('Compulsory to upload for event outside of MADA')
+                ->collapsible(true)
+                ->schema([
+                    FileUpload::make('attachment')
+                        ->acceptedFileTypes(['application/pdf'])
+                        ->downloadable(),
+                ]),
+                Section::make('4 - Vehicle and Driver Info')
+                ->description('Prevent abuse by limiting the number of requests per period')
+                ->collapsible()
+                ->schema([
+                    TextInput::make('progress')
+                        ->label('Booking Progress')
+                        ->default('New')
+                        ->readOnly()
+                        ->required()
+                        ->maxLength(255),
+                    Select::make('approver.name')
+                        ->label('Approver Name')
+                        ->options(
+                            User::whereHas('roles', function($q){ $q->where('name', 'Approver');})->pluck('name', 'id')
+                        )
+                        ->searchable()
+                        ->preload(),                    
+                    Select::make('driver_id')
+                        ->label('Requesting Driver...')
+                        ->relationship('driver', 'name', fn(Builder $query) => $query->where('type', 'Bebas')->orderBy('name', 'asc'))
+                        ->searchable()
+                        ->preload()
+                        ->required(),                 
+                    Select::make('cartype_id')
+                        ->label('Request Vehicle Type')
+                        ->relationship('cartype', 'name', fn(Builder $query) => $query->orderBy('id', 'asc'))
+                        ->required(),                   
+                ])->columns(2),
+
+
+                Section::make('5 - Passenger Info')
+                    ->description('Prevent abuse by limiting the number of requests per period')
+                    ->collapsible()
+                    ->schema([
+                        Repeater::make('passengers')
+                            ->label('Passenger Info')
+                            ->schema([
+                                Select::make('passenger_name')
+                                    ->options(
+                                        fn(Get $get): Collection 
+                                            => Staff::query()
+                                                ->where('nama', '!=', $get('name'))
+                                                ->where('status_code', 1)
+                                                ->orderBy('nama', 'asc')
+                                                ->pluck('nama', 'nama'))
+                                    ->searchable()
+                                    ->preload(),
+
+                            ]),
+                    ]),
                 
             ]);
     }
@@ -138,30 +152,57 @@ class VehiclebookingResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                BadgeColumn::make('progress')
+                    ->color(static function($state): string {
+                        if($state == 'New')
+                            return 'success';
+                        else    
+                            return 'primary';
+                    })
                     ->searchable(),
-                Tables\Columns\TextColumn::make('staffid')
+                TextColumn::make('name')
+                    ->label('Applicant Name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('start_date')
-                    ->dateTime()
+                TextColumn::make('staffid')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('start_date')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('start_event_date')
-                    ->dateTime()
+                TextColumn::make('start_event_date')
+                    ->date('d-m-Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('end_date')
-                    ->date()
+                TextColumn::make('end_date')
+                    ->date('d-m-Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('attachment')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('attachment')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                
+                TextColumn::make('user.name')
+                    ->label('Clerk Name')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('cartype.name')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('approval name')
+                    ->state(function(Vehiclebooking $record, User $user) {
+                        $user = $user->find($record->approval->user_id);
+                        return $user->name;
+                    })
+                    ->sortable(),
+                TextColumn::make('driver.name')
+                    ->sortable(),
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -59,8 +59,12 @@ class UserResource extends Resource
                             ->options(Staff::all()->pluck('nama', 'nama'))
                             ->live()
                             ->afterStateUpdated(function($state, $set, Staff $staff){
-                                $stf = $staff->where('nama', '=', $state)->first();
-                                $set('staffid', $stf->staff_id);
+                                if(!empty($state)) {
+                                    $stf = $staff->where('nama', '=', $state)->first();
+                                    $set('staffid', $stf->staff_id);
+                                } else {
+                                    $set('staffid', '');
+                                }
                             })
                             ->searchable()
                             ->preload()
@@ -75,7 +79,7 @@ class UserResource extends Resource
                             ->unique()
                             ->maxLength(255),
                     ])
-                    ->columns(3),
+                    ->columns(2),
                 Wizard\Step::make('Roles And Permission')
                     ->description('Permission and Roles for the user')
                     ->icon('heroicon-o-finger-print')       
@@ -120,7 +124,6 @@ class UserResource extends Resource
             
             
         ])
-        ->createAnother(false)
         ->columns(3);
 
     }
