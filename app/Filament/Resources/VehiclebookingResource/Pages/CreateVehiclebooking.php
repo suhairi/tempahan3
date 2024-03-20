@@ -28,7 +28,7 @@ class CreateVehiclebooking extends CreateRecord
         $data['user_id'] = $this->data['user_id'] = auth()->id();
 
         $user = User::find($data['user_id']);
-        if(!$user->hasRole('Approver'))
+        if(!$user->hasRole('Clerk'))
             return abort(403);
         
         $data['progress'] = $this->data['progress'] = 'New';

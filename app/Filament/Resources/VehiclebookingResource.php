@@ -64,10 +64,10 @@ class VehiclebookingResource extends Resource
                 ->description('')
                 ->collapsible(true)
                 ->schema([
-                    Section::make('Date and Time')
+                    Section::make('Date and Time of Vehicle Required')
                         ->schema([
                             DateTimePicker::make('start_date')
-                                ->minDate(now()->addDay()->subHour(2))
+                                ->minDate(now())
                                 ->required(),
                         ])->columns(2),
                         Section::make('Event Date & Destination')
@@ -80,12 +80,14 @@ class VehiclebookingResource extends Resource
                                     'Perak'     => 'Perak',
                                     'Selangor'  => 'Selangor',
                                 ])->columnSpanFull(),
-                            DatePicker::make('start_event_date')
+                            DateTimePicker::make('start_event_date')
                                 ->label('Event Start Date')
+                                ->minDate(now())
                                 ->afterOrEqual('start_date')
                                 ->required(),
-                            DatePicker::make('end_date')
+                            DateTimePicker::make('end_date')
                                 ->label('Event End Date')
+                                ->minDate(now())
                                 ->afterOrEqual('start_event_date')
                                 ->required(),
                             ])->columns(3),                    
