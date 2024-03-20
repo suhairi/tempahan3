@@ -31,6 +31,7 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
         $user->assignRole('Super Admin');
+        $user->assignRole('Approver');
 
         $user = User::create([
             'name'      => strtoupper('Juliana binti Abdul Sattar'),

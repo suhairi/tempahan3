@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Mail\VehicleBooked;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Mail;
 
 class CreateUser extends CreateRecord
 {
@@ -22,10 +24,10 @@ class CreateUser extends CreateRecord
 
         $user = $this->record;
 
-        // Mail::to($user)
-        //     // ->send(new UserCreated($user))
-        //     ->queue(new UserCreated($user))
-        //     ;
+        Mail::to($user)
+            // ->send(new UserCreated($user))
+            ->queue(new VehicleBooked($user))
+            ;
 
         return Notification::make()
             ->success()

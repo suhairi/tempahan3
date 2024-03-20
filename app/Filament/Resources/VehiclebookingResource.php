@@ -15,6 +15,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -38,7 +39,6 @@ class VehiclebookingResource extends Resource
     {
         return $form
             ->schema([
-
                 Section::make('1 - Applicant Info')
                 ->description('')
                 ->collapsible(true)
@@ -64,26 +64,31 @@ class VehiclebookingResource extends Resource
                 ->description('')
                 ->collapsible(true)
                 ->schema([
-                    DateTimePicker::make('start_date')
-                        ->minDate(now()->addDay()->subHour(2))
-                        ->required()
-                        ->native(false),
-                    DatePicker::make('start_event_date')
-                        ->afterOrEqual('start_date')
-                        ->required()
-                        ->native(false),
-                    DatePicker::make('end_date')
-                        ->afterOrEqual('start_event_date')
-                        ->required()
-                        ->native(false),
-                    Select::make('destination')
-                        ->options([
-                            'MADA' => 'Dalam Kawasan MADA',
-                            'Kuala Lumpur' => 'Kuala Lumpur',
-                            'Penang'    => 'Penang',
-                            'Perak'     => 'Perak',
-                            'Selangor'  => 'Selangor',
-                        ]),
+                    Section::make('Date and Time')
+                        ->schema([
+                            DateTimePicker::make('start_date')
+                                ->minDate(now()->addDay()->subHour(2))
+                                ->required(),
+                        ])->columns(2),
+                        Section::make('Event Date & Destination')
+                        ->schema([
+                            Select::make('destination')
+                                ->options([
+                                    'MADA' => 'Dalam Kawasan MADA',
+                                    'Kuala Lumpur' => 'Kuala Lumpur',
+                                    'Penang'    => 'Penang',
+                                    'Perak'     => 'Perak',
+                                    'Selangor'  => 'Selangor',
+                                ])->columnSpanFull(),
+                            DatePicker::make('start_event_date')
+                                ->label('Event Start Date')
+                                ->afterOrEqual('start_date')
+                                ->required(),
+                            DatePicker::make('end_date')
+                                ->label('Event End Date')
+                                ->afterOrEqual('start_event_date')
+                                ->required(),
+                            ])->columns(3),                    
                 ])->columns(3),
 
                 Section::make('3 - Supporting Document')
@@ -98,14 +103,9 @@ class VehiclebookingResource extends Resource
                 ->description('Prevent abuse by limiting the number of requests per period')
                 ->collapsible()
                 ->schema([
-                    TextInput::make('progress')
-                        ->label('Booking Progress')
-                        ->default('New')
-                        ->readOnly()
-                        ->required()
-                        ->maxLength(255),
-                    Select::make('approver.name')
+                    Select::make('approver_id')
                         ->label('Approver Name')
+                        ->required()
                         ->options(
                             User::whereHas('roles', function($q){ $q->where('name', 'Approver');})->pluck('name', 'id')
                         )
@@ -212,6 +212,7 @@ class VehiclebookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

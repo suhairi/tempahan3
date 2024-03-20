@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\VehiclebookingResource\Pages;
 
 use App\Filament\Resources\VehiclebookingResource;
+use App\Mail\VehicleBooked;
 use App\Models\Approval;
 use App\Models\Passenger;
 use App\Models\Staff;
@@ -11,6 +12,7 @@ use App\Models\Vehiclebooking;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Mail;
 
 class CreateVehiclebooking extends CreateRecord
 {
@@ -23,18 +25,42 @@ class CreateVehiclebooking extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['user_id'] = auth()->id();
+        $data['user_id'] = $this->data['user_id'] = auth()->id();
+
+        $user = User::find($data['user_id']);
+        if(!$user->hasRole('Approver'))
+            return abort(403);
+        
+        $data['progress'] = $this->data['progress'] = 'New';
 
         $staffid = Staff::where('nama', $data['name'])->first();
         $data['staffid'] = $staffid->staff_id;
 
-        $approver = Approval::create([
-                        'user_id'   => $data['approver']['name'],
+        $approval = Approval::create([
+                        'user_id'   => $data['approver_id'],
                         'status'    => 'new',   
                     ]);
-        $this->data['approval_id'] = $approver->id;
+        $data['approval_id'] = $this->data['approval_id'] = $approval->id;
+        
+        /*
+        // Modification to $data
+        // this function should return $data, not $this->data
+        // below are the modifications
+        */
+        $this->data['attachment'] = $data['attachment'];
+
+        // dump($this->data);
+        // dd($data);
+
+        // Send notification to approver
+        // $approver = User::find($approver->id);
+        $approver = User::find(1); // for development purpose, just send the notification to approve booking to me.
+        $approver->email = 'suhairi@mada.gov.my';
+        Mail::to($approver)
+            ->queue(new VehicleBooked($approver, $data));
     
         // dd($data);
+        // $data['progress'] = 'New';
         return $data;
     }
 
@@ -43,7 +69,6 @@ class CreateVehiclebooking extends CreateRecord
         // Runs after the form fields are saved to the database.
         // Create passenger data
         $vehiclebooking_id = $this->record->id;
-
         foreach($this->data['passengers'] as $passenger)
         {
             Passenger::create([
@@ -56,6 +81,8 @@ class CreateVehiclebooking extends CreateRecord
         $this->record->approval_id = $this->data['approval_id'];
         $this->record->save();
         // dd($this->data);
+
+        
 
     }
 }

@@ -163,13 +163,13 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
-                    ->successNotification(
-                        Notification::make()
-                            ->success()
-                            ->title('User deleted : ')
-                            ->body('The user has been deleted successfully.')
-                            ->sendToDatabase(auth()->user()),
-                    ),
+                    // ->successNotification(
+                    //     Notification::make()
+                    //         ->success()
+                    //         ->title('User deleted : ')
+                    //         ->body('The user has been deleted successfully.')
+                    //         ->sendToDatabase(auth()->user()),
+                    // ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
