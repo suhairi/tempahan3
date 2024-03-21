@@ -38,7 +38,6 @@ class CreateVehiclebooking extends CreateRecord
 
         $approval = Approval::create([
                         'user_id'   => $data['approver_id'],
-                        'status'    => 'new',   
                     ]);
         $data['approval_id'] = $this->data['approval_id'] = $approval->id;
         

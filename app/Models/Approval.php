@@ -13,6 +13,10 @@ class Approval extends Model
 
     protected $fillable = ['user_id', 'status'];
 
+    // protected $casts = [
+    //     'status' => 'boolean',
+    // ];
+
     public function vehiclebooking(): HasOne
     {
         return $this->hasOne(Vehiclebooking::class);

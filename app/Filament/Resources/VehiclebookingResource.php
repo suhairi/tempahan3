@@ -34,6 +34,7 @@ class VehiclebookingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Vehicle Booking Form';
+    protected static ?string $navigationGroup = 'Forms Management';
 
     public static function form(Form $form): Form
     {

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('approvals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id'); // approver
-            $table->string('status'); // approve or disapprove or pending
+            $table->boolean('status')->default(false); // approve or disapprove or pending
             $table->timestamps();
         });
     }
