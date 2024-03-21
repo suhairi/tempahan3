@@ -1,12 +1,17 @@
 <x-mail::message>
-# Introduction
+# Salam
 
-The body of your message.
+# e-Tempahan Online System<br />
+You have one approved vehicle form to proceed with actions. <br /><br />
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+Details :- <br />
+Applicant : {{ $name }} <br />
+
+
+
+Click here to <a href="{{ $url }}">Login</a>
+    
 
 Thanks,<br>
-{{ config('app.name') }}
+Unit Logistik, {{ config('app.name') }}
 </x-mail::message>

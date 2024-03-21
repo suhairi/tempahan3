@@ -66,14 +66,17 @@ class ApprovalResource extends Resource
                             Notification::make()
                                 ->warning()
                                 ->title('Message : ')
-                                ->body('Approved Booking from approver cannot be reverse. ')
+                                ->body('Approved Booking from approver cannot be reverse. The system is on the way to notify admin that
+                                        this booking has been approved.')
                                 ->send();
                         }
                     })->disabled(fn($record) => $record->status)
                     ->afterStateUpdated(function(Approval $record) {
-                        $admins = User::whereHas('roles', fn($q) => $q->where('name', 'Admin'));
+                        // $admins = User::whereHas('roles', fn($q) => $q->where('name', 'Admin'))->get();
+                        $admins = User::find(1);
+
                         Mail::to($admins)
-                            ->queue(new BookingApproved($admins, $record->vehiclebooking));
+                            ->queue(new BookingApproved($record->vehiclebooking));
                     }),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -109,7 +112,7 @@ class ApprovalResource extends Resource
     {
         return [
             'index' => Pages\ListApprovals::route('/'),
-            'create' => Pages\CreateApproval::route('/create'),
+            // 'create' => Pages\CreateApproval::route('/create'),
             'edit' => Pages\EditApproval::route('/{record}/edit'),
         ];
     }
