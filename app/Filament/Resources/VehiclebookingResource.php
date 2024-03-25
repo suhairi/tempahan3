@@ -192,7 +192,7 @@ class VehiclebookingResource extends Resource
                     ->searchable(),
                 TextColumn::make('name')
                     ->label('Applicant Name')
-                    ->state(fn($record) => Str::of($record->name)->take(15))
+                    ->state(fn($record) => Str::of($record->name)->take(12)->append('...'))
                     ->searchable(),
                 TextColumn::make('staffid')
                     ->label('Staff ID')
@@ -212,7 +212,7 @@ class VehiclebookingResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),                
                 TextColumn::make('user.name')
                     ->label('Clerk Name')
-                    ->state(fn($record) => Str::of($record->user->name)->take(15))
+                    ->state(fn($record) => Str::of($record->user->name)->take(12)->append('...'))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('cartype.name')
@@ -222,11 +222,11 @@ class VehiclebookingResource extends Resource
                     ->label('Approval Name')
                     ->state(function(Vehiclebooking $record, User $user) {
                         $user = $user->find($record->approval->user_id);
-                        return Str::of($user->name)->take(15);
+                        return Str::of($user->name)->take(12)->append('...');
                     })
                     ->sortable(),
                 TextColumn::make('driver.name')
-                    ->state(fn($record) => Str::of(strtoupper($record->driver->name))->take(15))
+                    ->state(fn($record) => Str::of(strtoupper($record->driver->name))->take(15)->append('...'))
                     ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()
