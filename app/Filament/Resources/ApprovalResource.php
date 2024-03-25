@@ -8,6 +8,7 @@ use App\Mail\BookingApproved;
 use App\Mail\VehicleBooked;
 use App\Models\Approval;
 use App\Models\User;
+use App\Models\Vehiclebooking;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -18,6 +19,7 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class ApprovalResource extends Resource
@@ -26,6 +28,14 @@ class ApprovalResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Forms Management';
+
+    public static function getEloquentQuery(): Builder
+    {
+        if(Auth::user()->hasRole('Super Admin'))
+            return parent::getEloquentQuery();
+        
+        return parent::getEloquentQuery()->where('user_id', auth()->user()->id);
+    }
 
     public static function form(Form $form): Form
     {
@@ -71,6 +81,9 @@ class ApprovalResource extends Resource
                                 ->body('Approved Booking from approver cannot be reverse. The system is on the way to notify admin that
                                         this booking has been approved.')
                                 ->send();
+                            $vBooking = Vehiclebooking::where('approval_id', $record->id)->first();
+                            $vBooking->progress = 'Approved';
+                            $vBooking->save();
                         }
                     })->disabled(fn($record) => $record->status)
                     ->afterStateUpdated(function(Approval $record) {

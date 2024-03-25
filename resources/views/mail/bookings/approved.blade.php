@@ -2,7 +2,7 @@
 # Salam
 
 # e-Tempahan Online System<br />
-You have one approved vehicle form to proceed with actions. <br /><br />
+Dear admins, you have one approved vehicle form to proceed with necessary actions. <br /><br />
 
 Details :- <br />
 Applicant : {{ $name }} <br />

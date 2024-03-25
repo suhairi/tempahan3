@@ -7,6 +7,8 @@ use App\Filament\Resources\VehiclebookingResource\RelationManagers;
 use App\Models\Staff;
 use App\Models\User;
 use App\Models\Vehiclebooking;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -18,6 +20,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
@@ -26,7 +30,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use PHPUnit\TestRunner\TestResult\Collector;
+
+use Illuminate\Support\Str;
 
 class VehiclebookingResource extends Resource
 {
@@ -35,6 +42,21 @@ class VehiclebookingResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel = 'Vehicle Booking Form';
     protected static ?string $navigationGroup = 'Forms Management';
+
+    protected ?string $heading = 'Vehicle Booking List';
+
+    public function getHeading(): string
+    {
+        return 'Vehicle Booking List';
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if(Auth::user()->hasRole('Clerk'))
+            return parent::getEloquentQuery()->where('user_id', auth()->user()->id);
+
+        return parent::getEloquentQuery();
+    }
 
     public static function form(Form $form): Form
     {
@@ -109,6 +131,11 @@ class VehiclebookingResource extends Resource
                     Select::make('approver_id')
                         ->label('Approver Name')
                         ->required()
+                        // ->relationship('user', 'name', function(Builder $query)
+                        //     { 
+                        //         $query->whereHas('role', fn($q) => $q->where('name', 'Approver'))->pluck('name', 'id');
+                        //     }
+                        // )
                         ->options(
                             User::whereHas('roles', function($q){ $q->where('name', 'Approver');})->pluck('name', 'id')
                         )
@@ -165,8 +192,10 @@ class VehiclebookingResource extends Resource
                     ->searchable(),
                 TextColumn::make('name')
                     ->label('Applicant Name')
+                    ->state(fn($record) => Str::of($record->name)->take(15))
                     ->searchable(),
                 TextColumn::make('staffid')
+                    ->label('Staff ID')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('start_date')
@@ -180,22 +209,24 @@ class VehiclebookingResource extends Resource
                     ->sortable(),
                 TextColumn::make('attachment')
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                
+                    ->toggleable(isToggledHiddenByDefault: true),                
                 TextColumn::make('user.name')
                     ->label('Clerk Name')
+                    ->state(fn($record) => Str::of($record->user->name)->take(15))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('cartype.name')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('approval name')
+                    ->label('Approval Name')
                     ->state(function(Vehiclebooking $record, User $user) {
                         $user = $user->find($record->approval->user_id);
-                        return $user->name;
+                        return Str::of($user->name)->take(15);
                     })
                     ->sortable(),
                 TextColumn::make('driver.name')
+                    ->state(fn($record) => Str::of(strtoupper($record->driver->name))->take(15))
                     ->sortable(),
                 TextColumn::make('deleted_at')
                     ->dateTime()

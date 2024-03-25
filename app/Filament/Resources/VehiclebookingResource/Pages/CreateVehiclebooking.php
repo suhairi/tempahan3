@@ -14,9 +14,17 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Mail;
 
+use function PHPUnit\Framework\isEmpty;
+
 class CreateVehiclebooking extends CreateRecord
 {
     protected static string $resource = VehiclebookingResource::class;
+    protected ?string $heading = 'Vehicle Booking Form';
+
+    public function getSubheading(): string
+    {
+        return 'This form will ...';
+    }
 
     protected function getRedirectUrl(): string
     {
@@ -79,5 +87,17 @@ class CreateVehiclebooking extends CreateRecord
         $this->record->approval_id = $this->data['approval_id'];
         $this->record->save();
         // dd($this->data);
+    }
+
+    protected function beforeFill(): void
+    {
+        // 1 - Check approval that has no vehicle booking
+        $approvals = Approval::all();
+        foreach($approvals as $approval)
+        {
+            $vBooking = Vehiclebooking::where('approval_id', $approval->id)->first();
+            if($vBooking == null)
+                $approval->delete();
+        }
     }
 }
