@@ -50,6 +50,8 @@ class ApprovalResource extends Resource
                     ->sortable(),
                 TextColumn::make('vehiclebooking.name')
                     ->label('Applicant'),
+                TextColumn::make('vehiclebooking.driver.name')
+                    ->label('Driver'),
                 TextColumn::make('vehiclebooking.start_date')
                     ->label('Start Date')
                     ->date('d-m-Y'),

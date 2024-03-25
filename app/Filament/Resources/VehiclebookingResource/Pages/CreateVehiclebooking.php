@@ -54,7 +54,6 @@ class CreateVehiclebooking extends CreateRecord
         // Send notification to approver
         // $approver = User::find($approver->id);
         $approver = User::find(1); // for development purpose, just send the notification to approve booking to me.
-        $approver->email = 'suhairi@mada.gov.my';
         Mail::to($approver)
             ->queue(new VehicleBooked($approver, $data));
     
@@ -80,8 +79,5 @@ class CreateVehiclebooking extends CreateRecord
         $this->record->approval_id = $this->data['approval_id'];
         $this->record->save();
         // dd($this->data);
-
-        
-
     }
 }

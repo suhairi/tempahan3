@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
     {
         $user = User::create([
             'name'      => strtoupper('Suhairi Abdul Hamid'),
-            'email'     => 'admin@admin.com',
+            'email'     => 'suhairi81@gmail.com',
             'staffid'   => '3374',
             'password'  => bcrypt('password'),
             'email_verified_at' => now(),
@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
         $user->assignRole('Super Admin');
 
         $user = User::create([
-            'name'      => strtoupper('Mohd Hazran bin Md Zuki'),
+            'name'      => strtoupper('Mohammad Hafizi Hazran bin Md Zuki'),
             'email'     => 'hazran@mada.gov.my',
             'staffid'   => '3834',
             'password'  => bcrypt('password'),
