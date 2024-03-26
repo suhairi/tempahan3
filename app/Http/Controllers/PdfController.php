@@ -21,4 +21,9 @@ class PdfController extends Controller
                     ->setPaper('a4');
         return $pdf->download('Booking #' . $record->id . '_' . now() . '.pdf');
     }
+
+    public function listing()
+    {
+        return;
+    }
 }
