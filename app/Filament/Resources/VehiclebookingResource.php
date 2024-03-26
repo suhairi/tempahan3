@@ -24,6 +24,7 @@ use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -43,7 +44,7 @@ class VehiclebookingResource extends Resource
     protected static ?string $navigationLabel = 'Vehicle Booking Form';
     protected static ?string $navigationGroup = 'Forms Management';
 
-    protected ?string $heading = 'Vehicle Booking List';
+    protected static ?string $label = 'Vehicle Booking Form';
 
     public function getHeading(): string
     {
@@ -203,6 +204,7 @@ class VehiclebookingResource extends Resource
                     ->sortable(),
                 TextColumn::make('start_event_date')
                     ->date('d-m-Y')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('end_date')
                     ->date('d-m-Y')
@@ -224,6 +226,7 @@ class VehiclebookingResource extends Resource
                         $user = $user->find($record->approval->user_id);
                         return Str::of($user->name)->take(12)->append('...');
                     })
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 TextColumn::make('driver.name')
                     ->state(fn($record) => Str::of(strtoupper($record->driver->name))->take(15)->append('...'))
@@ -246,7 +249,13 @@ class VehiclebookingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
+                Action::make('PDF')
+                    ->label('Download')
+                    ->color('info')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->url(fn(Vehiclebooking $record) => route('pdf.bookings.vehicle.index', $record->id))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

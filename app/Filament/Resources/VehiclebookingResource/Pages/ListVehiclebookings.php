@@ -14,6 +14,12 @@ class ListVehiclebookings extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\Action::make('pdf')
+                ->label('*Download The List*')
+                ->color('info')
+                ->icon('heroicon-o-document-arrow-down')
+                
+                ->openUrlInNewTab(),
         ];
     }
 }

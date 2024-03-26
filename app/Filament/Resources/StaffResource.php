@@ -58,6 +58,7 @@ class StaffResource extends Resource
                             return 'Encik/Puan/Cik';
                         return $glrn->name;
                     })
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
