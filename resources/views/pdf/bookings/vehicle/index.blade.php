@@ -10,33 +10,80 @@
 </head>
 <body>
 
-    <div class="container m-4">
+    <div class="m-4">
 
         <h1>Details Vehicle Booking Form</h1>
-        <table class="table table-bordered">
+
+        <div><p><strong>Status :</strong> {{ $record->progress }}</p></div>
+        <table class="table table-bordered table-dark table-sm">
             <tr>
-                <td class="font-bold">Applicant</td>
-                <td>{{ $record->name }}</td>
+                <td colspan="2"><strong>Applicant Info</strong></td>
             </tr>
             <tr>
-                <td class="font-bold">Start Date</td>
-                <td>{{ Carbon\Carbon::parse($record->start_date)->format('d-m-Y') }}</td>
+                <td width="20%"><strong>Applicant Name</strong></td>
+                <td>{{ $record->staffid }} - {{ $record->name }} </td>
             </tr>
             <tr>
-                <td class="font-bold">End Date</td>
-                <td>{{ Carbon\Carbon::parse($record->end_date)->format('d-m-Y') }}</td>
+                <td><strong>Approver / Supervisor</strong></td>
+                <td>{{ $record->approval->user->staffid }} - {{ $record->approval->user->name }}</td>
+            </tr>
+        </table>
+            
+        <table class="table table-bordered table-sm bg">
+            <tr>
+                <td colspan="2"><strong>Event & Booking Info</strong></td>
             </tr>
             <tr>
-                <td class="font-bold">Driver</td>
-                <td>{{ strtoupper($record->driver->name) }}</td>
+                <td width="20%"><strong>Booking Start Date</strong></td>
+                <td>{{ $record->start_date }} - {{ Carbon\Carbon::parse($record->start_date)->locale('en')->dayName }}</td>
             </tr>
             <tr>
-                <td class="font-bold">Destination</td>
-                <td>{{ strtoupper($record->destination) }}</td>
+                <td><strong>Event Start Date</strong></td>
+                <td>{{ $record->start_event_date }} - {{ Carbon\Carbon::parse($record->start_event_date)->locale('en')->dayName }}</td>
             </tr>
             
+            <tr>
+                <td><strong>End Date</strong></td>
+                <td>{{ $record->end_date }} - {{ Carbon\Carbon::parse($record->end_date)->locale('en')->dayName }}</td>
+            </tr>
+            <tr>
+                <td><strong>Event Location</strong></td>
+                <td>{{ $record->destination }}</td>
+            </tr>
         </table>
-
+        
+        <table class="table table-bordered table-sm bg">
+            <tr>
+                <td colspan="2"><strong>Vehicle and Driver Info</strong></td>
+            </tr>
+            <tr>
+                <td width="20%"><strong>Request Driver Name</strong></td>
+                <td>{{ $record->driver->name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Request Vehicle Type</strong></td>
+                <td>{{ $record->cartype->name }}</td>
+            </tr>
+        </table>
+        <table class="table table-bordered table-sm bg">
+            <tr>
+                <td colspan="2"><strong>Passengers Info</strong></td>
+            </tr>
+            @if(empty($record->passengers()->first()))
+            <tr>
+                <td>*No passenger.</td>
+            </tr>
+            @else
+                @foreach($record->passengers()->get() as $passenger)
+                    <tr>
+                        <td width="20%"><strong>Name #{{ $loop->iteration }}</strong></td>
+                        <td>{{ $passenger->name }}</td>
+                    </tr>
+                @endforeach
+            @endif
+        </table>
+        <button type="button" class="btn btn-primary">Primary</button>
+        
     </div>
     
     

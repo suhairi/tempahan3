@@ -25,7 +25,8 @@ return new class extends Migration
 
             $table->string('progress'); // new, processing, success, cancel
 
-            $table->foreignId('user_id'); // the clerk user_id whom fill in this form
+            $table->foreignId('approver_id');
+            $table->foreignId('clerk_id'); // the clerk user_id whom fill in this form
             $table->foreignId('cartype_id'); // vehicle type to request
             $table->foreignId('approval_id')->nullable();
             $table->foreignId('driver_id');

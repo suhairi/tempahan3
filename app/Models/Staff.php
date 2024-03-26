@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Staff extends Model
 {
@@ -29,5 +31,10 @@ class Staff extends Model
     public function jawatan(): BelongsTo
     {
         return $this->belongsTo(Jawatan::class, 'kod_jawatan_semasa');
+    }
+
+    public function passenger(): HasMany
+    {
+        return $this->hasMany(Passenger::class);
     }
 }

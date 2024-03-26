@@ -33,9 +33,9 @@ class CreateVehiclebooking extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['user_id'] = $this->data['user_id'] = auth()->id();
+        $data['clerk_id'] = $this->data['clerk_id'] = auth()->id();
 
-        $user = User::find($data['user_id']);
+        $user = User::find($data['clerk_id']);
         if(!$user->hasRole('Clerk'))
             return abort(403);
         
@@ -45,7 +45,7 @@ class CreateVehiclebooking extends CreateRecord
         $data['staffid'] = $staffid->staff_id;
 
         $approval = Approval::create([
-                        'user_id'   => $data['approver_id'],
+                        'user_id'   => $this->data['approver_id'],
                     ]);
         $data['approval_id'] = $this->data['approval_id'] = $approval->id;
         
@@ -75,10 +75,13 @@ class CreateVehiclebooking extends CreateRecord
         // Runs after the form fields are saved to the database.
         // Create passenger data
         $vehiclebooking_id = $this->record->id;
+        // dd($this->data['passengers']);
         foreach($this->data['passengers'] as $passenger)
         {
+            $staffName = Staff::where('staff_id', $passenger['passenger_staffid'])->first()->nama;
             Passenger::create([
-                'name' => $passenger['passenger_name'],
+                'staffid'   => $passenger['passenger_staffid'],
+                'name'      => $staffName,
                 'vehiclebooking_id' => $vehiclebooking_id,
             ]);
         }
@@ -91,7 +94,7 @@ class CreateVehiclebooking extends CreateRecord
 
     protected function beforeFill(): void
     {
-        // 1 - Check approval that has no vehicle booking
+        // 1 - Check Approval that has no Vehiclebooking, and delete them
         $approvals = Approval::all();
         foreach($approvals as $approval)
         {
@@ -99,5 +102,11 @@ class CreateVehiclebooking extends CreateRecord
             if($vBooking == null)
                 $approval->delete();
         }
+
+        // 2 - Check Vehiclebooking that has no Approval, and delete them.
+        $vBookings = Vehiclebooking::where('approval_id', null)->get();
+        foreach($vBookings as $vBooking)
+            $vBooking->delete();
+        
     }
 }

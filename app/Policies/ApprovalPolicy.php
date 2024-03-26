@@ -13,7 +13,7 @@ class ApprovalPolicy
      */
     public function viewAny(User $user): bool
     {
-        return auth()->user()->hasRole('Approver');
+        return auth()->user()->hasRole(['Approver', 'Super Admin']);
     }
 
     /**
@@ -21,7 +21,7 @@ class ApprovalPolicy
      */
     public function view(User $user, Approval $approval): bool
     {
-        return auth()->user()->hasRole('Approver');
+        return auth()->user()->hasRole(['Approver', 'Super Admin']);
     }
 
     /**
@@ -29,7 +29,7 @@ class ApprovalPolicy
      */
     public function create(User $user): bool
     {
-        return auth()->user()->hasRole('Approver');
+        return auth()->user()->hasRole(['Approver', 'Super Admin']);
     }
 
     /**
@@ -37,7 +37,7 @@ class ApprovalPolicy
      */
     public function update(User $user, Approval $approval): bool
     {
-        return auth()->user()->hasRole('Approver');
+        return auth()->user()->hasRole(['Approver', 'Super Admin']);
     }
 
     /**
@@ -45,7 +45,7 @@ class ApprovalPolicy
      */
     public function delete(User $user, Approval $approval): bool
     {
-        return auth()->user()->hasRole('Approver');
+        return auth()->user()->hasRole(['Approver', 'Super Admin']);
     }
 
     /**
@@ -53,7 +53,7 @@ class ApprovalPolicy
      */
     public function restore(User $user, Approval $approval): bool
     {
-        return auth()->user()->hasRole('Approver');
+        return auth()->user()->hasRole(['Approver', 'Super Admin']);
     }
 
     /**
@@ -61,6 +61,6 @@ class ApprovalPolicy
      */
     public function forceDelete(User $user, Approval $approval): bool
     {
-        return auth()->user()->hasRole('Approver');
+        return auth()->user()->hasRole(['Approver', 'Super Admin']);
     }
 }

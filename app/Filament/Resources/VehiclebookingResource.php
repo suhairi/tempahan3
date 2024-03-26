@@ -54,7 +54,7 @@ class VehiclebookingResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         if(Auth::user()->hasRole('Clerk'))
-            return parent::getEloquentQuery()->where('user_id', auth()->user()->id);
+            return parent::getEloquentQuery()->where('clerk_id', auth()->user()->id);
 
         return parent::getEloquentQuery();
     }
@@ -70,6 +70,7 @@ class VehiclebookingResource extends Resource
                     Forms\Components\Select::make('name')
                         ->label('Applicant Name')
                         ->required()
+                        ->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
                         ->options(Staff::query()->orderBy('nama', 'asc')->pluck('nama', 'nama'))
                         ->searchable()
                         ->preload()
@@ -125,6 +126,7 @@ class VehiclebookingResource extends Resource
                         ->acceptedFileTypes(['application/pdf'])
                         ->downloadable(),
                 ]),
+
                 Section::make('4 - Vehicle and Driver Info')
                 ->description('Prevent abuse by limiting the number of requests per period')
                 ->collapsible()
@@ -132,14 +134,8 @@ class VehiclebookingResource extends Resource
                     Select::make('approver_id')
                         ->label('Approver Name')
                         ->required()
-                        // ->relationship('user', 'name', function(Builder $query)
-                        //     { 
-                        //         $query->whereHas('role', fn($q) => $q->where('name', 'Approver'))->pluck('name', 'id');
-                        //     }
-                        // )
-                        ->options(
-                            User::whereHas('roles', function($q){ $q->where('name', 'Approver');})->pluck('name', 'id')
-                        )
+                        ->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
+                        ->relationship('approver', 'name')
                         ->searchable()
                         ->preload(),                    
                     Select::make('driver_id')
@@ -151,6 +147,7 @@ class VehiclebookingResource extends Resource
                     Select::make('cartype_id')
                         ->label('Request Vehicle Type')
                         ->relationship('cartype', 'name', fn(Builder $query) => $query->orderBy('id', 'asc'))
+                        ->default(1)
                         ->required(),                   
                 ])->columns(2),
 
@@ -162,18 +159,12 @@ class VehiclebookingResource extends Resource
                         Repeater::make('passengers')
                             ->label('Passenger Info')
                             ->schema([
-                                Select::make('passenger_name')
-                                    ->options(
-                                        fn(Get $get): Collection 
-                                            => Staff::query()
-                                                ->where('nama', '!=', $get('name'))
-                                                ->where('status_code', 1)
-                                                ->orderBy('nama', 'asc')
-                                                ->pluck('nama', 'nama'))
+                                Select::make('passenger_staffid')
+                                    ->relationship('passengers.staff', 'nama')
                                     ->searchable()
                                     ->preload(),
 
-                            ]),
+                        ])->maxItems(3),
                     ]),
                 
             ]);

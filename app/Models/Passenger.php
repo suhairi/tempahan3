@@ -11,10 +11,15 @@ class Passenger extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'vehiclebooking_id'];
+    protected $fillable = ['name', 'staffid', 'vehiclebooking_id'];
 
     public function vehiclebooking(): HasOne
     {
         return $this->hasOne(Vehiclebooking::class);
+    }
+
+    public function staff(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class, 'staffid', 'staff_id');
     }
 }
