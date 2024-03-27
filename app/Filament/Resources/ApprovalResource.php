@@ -9,11 +9,13 @@ use App\Mail\VehicleBooked;
 use App\Models\Approval;
 use App\Models\User;
 use App\Models\Vehiclebooking;
+use Filament\Tables\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action as ActionsAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
@@ -21,6 +23,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+
+use Illuminate\Support\Str;
 
 class ApprovalResource extends Resource
 {
@@ -56,12 +60,19 @@ class ApprovalResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Approver')
-                    ->numeric()
-                    ->sortable(),
+                    ->state(fn($record) => Str::of($record->user->name)->take(15)->append('...'))
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('token')
+                ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('vehiclebooking.name')
-                    ->label('Applicant'),
+                    ->label('Applicant')
+                    ->state(fn($record) => Str::of($record->vehiclebooking->name)->take(15)->append('...'))
+                    ->sortable(),
                 TextColumn::make('vehiclebooking.driver.name')
-                    ->label('Driver'),
+                    ->label('Driver')
+                    ->state(fn($record) => Str::of($record->vehiclebooking->driver->name)->take(15)->append('...'))
+                    ->sortable(),
                 TextColumn::make('vehiclebooking.start_date')
                     ->label('Start Date')
                     ->date('d-m-Y'),
@@ -108,6 +119,9 @@ class ApprovalResource extends Resource
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
+                Action::make('Resend Approval Link')
+                    ->url(fn(Approval $approval) => route('resend_approval_link', $approval))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

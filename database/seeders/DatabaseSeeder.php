@@ -24,14 +24,16 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
 
-            JawatanSeeder::class,
+            // JawatanSeeder::class,
             GroupSeeder::class,
             // GradeSeeder::class,
             // BahagianSeeder::class,
-            // CawanganSeeder::class,
+            CawanganSeeder::class,
             SeksyenSeeder::class,
             StatusSeeder::class,
             GelaranSeeder::class,
+
+            ApproverSeeder::class,
 
             CartypeSeeder::class,
             CarbrandSeeder::class,

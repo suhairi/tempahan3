@@ -124,7 +124,8 @@ class VehiclebookingResource extends Resource
                 ->schema([
                     FileUpload::make('attachment')
                         ->acceptedFileTypes(['application/pdf'])
-                        ->downloadable(),
+                        ->downloadable()
+                        ->requiredIf('destination', 'Kuala Lumpur'),
                 ]),
 
                 Section::make('4 - Vehicle and Driver Info')
@@ -135,7 +136,10 @@ class VehiclebookingResource extends Resource
                         ->label('Approver Name')
                         ->required()
                         ->disabled(fn(Page $livewire) => $livewire instanceof EditRecord)
-                        ->relationship('approver', 'name')
+                        // ->relationship('approver', 'name')
+                        ->options(function() {
+                            return User::whereHas('roles', fn($q) => $q->where('name', 'Approver'))->pluck('name', 'id');
+                        })
                         ->searchable()
                         ->preload(),                    
                     Select::make('driver_id')
@@ -150,7 +154,6 @@ class VehiclebookingResource extends Resource
                         ->default(1)
                         ->required(),                   
                 ])->columns(2),
-
 
                 Section::make('5 - Passenger Info')
                     ->description('Prevent abuse by limiting the number of requests per period')

@@ -30,12 +30,12 @@ class Staff extends Model
 
     public function jawatan(): BelongsTo
     {
-        return $this->belongsTo(Jawatan::class, 'kod_jawatan_semasa');
+        return $this->belongsTo(Jawatan2::class, 'kod_jawatan_semasa');
     }
 
     public function gred(): BelongsTo
     {
-        return $this->belongsTo(Grade::class, 'kod_jawatan_semasa');
+        return $this->belongsTo(Grade2::class, 'kod_jawatan_semasa');
     }
 
     public function passenger(): HasMany

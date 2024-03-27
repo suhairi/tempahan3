@@ -14,7 +14,9 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Mail;
 
+use Illuminate\Support\Str;
 use function PHPUnit\Framework\isEmpty;
+
 
 class CreateVehiclebooking extends CreateRecord
 {
@@ -46,6 +48,7 @@ class CreateVehiclebooking extends CreateRecord
 
         $approval = Approval::create([
                         'user_id'   => $this->data['approver_id'],
+                        'token'     => Str::uuid(),
                     ]);
         $data['approval_id'] = $this->data['approval_id'] = $approval->id;
         

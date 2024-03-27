@@ -10,10 +10,6 @@ class Grade extends Model
 {
     use HasFactory;
 
-    protected $connection = 'mysql_2';
-    protected $table = 'gred';
-    protected $primaryKey = 'kod_gred';
-
     protected $fillable = ['kod_gred', 'info_gred', 'kod_jawatan', 'kod_kump'];
 
  

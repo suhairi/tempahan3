@@ -14,11 +14,11 @@
             <td align="center"><img src="{{ asset('images/logo.png') }}" height="120" width="120" class="mt-2 mb-2"></td>
         </tr>
         <tr>
-            <td><strong>PERMOHONAN MENGGUNA KENDERAAN JABATAN / PEMANDU <br /> DI IBU PEJABAT MADA</td>
+            <td align="center"><strong>PERMOHONAN MENGGUNA KENDERAAN JABATAN / PEMANDU <br /> DI IBU PEJABAT MADA</td>
         </tr>
         <tr>
             <td>
-                Permohonanmenggunakankenderaanjabatansebelum / semasa / selepaswaktupejabathendaklahmengisibutir-butir di ruangan yang <br />
+                Permohonan menggunakan kenderaan jabatan sebelum / semasa / selepas waktu pejabat hendaklah mengisib utir-butir di ruangan yang <br />
                 telah dikhaskan dalam borang ini.<br />
                 <ol type="i">
                     <li>Permohonan ini wajib dihantar menggunakan Borang Tempahan Kenderaan beserta SURAT PROGRAM/AKTIVITI  dari pihak yang berkenaan.</li>
@@ -39,59 +39,50 @@
             <td>
                 <table width="100%">
                     <tr>
-                        <td>NAMA :</td>
-                        <td>{{ $record->name }}</td>
-                        <td>NAMA PENUMPANG TAMBAHAN : </td>
-                    </tr>
-                    <tr>
-                        <td>UNIT/BAHAGIAN :</td>
-                        <td>{{ $record->staff->bahagian->singkatan }}</td>
-                        <td>1. </td>
-                    </tr>
-                    <tr>
-                        <td>JAWATAN :</td>
-                        <td>{{ $record->staff->jawatan->info_jawatan . ' - ' . $record->staff->gred->info_gred }}</td>
-                        <td>2. </td>
-                    </tr>
-                    <tr>
-                        <td>TARIKH MOHON :</td>
-                        <td>{{ Carbon\Carbon::parse($record->created_at)->format('d-m-Y H:i A') }}</td>
-                        <td>3. </td>
-                    </tr>
-                    <tr>
-                        <td>NO HP & SAMB :</td>
                         <td>
-                            No HP : {{ $record->no_tel }} <br />
-                            No Samb : {{ $record->connection }}
+                            <br />
+                            <strong>NAMA : </strong>{{ $record->name }} <br /><br />
+                            <strong>UNIT / BAHAGIAN : </strong>{{ $record->staff->bahagian->info_bhgn }}<br /><br />
+                            <strong>JAWATAN : </strong>{{ $record->staff->jawatan->info_jawatan }} - {{ $record->staff->gred->info_gred }} <br /><br />
+                            <strong>TARIKH MOHON : </strong>{{ Carbon\Carbon::parse($record->created_at)->format('d-m-Y H:i A') }} <br /><br />
+                            <strong>NO HP : </strong>{{ $record->staff->no_tel }}<br /><br />
+                            <strong>TARIKH GUNA : </strong>{{ Carbon\Carbon::parse($record->start_date)->format('d-m-Y') }}<br /><br />
+                            <strong>MASA : </strong>{{ Carbon\Carbon::parse($record->start_date)->format('H:i A') }}<br /><br />
                         </td>
-                        <td>4. </td>
-                    </tr>
-                    <tr>
-                        <td>TARIKH GUNA :</td>
-                        <td>{{ Carbon\Carbon::parse($record->start_date)->format('d-m-Y') }}</td>
-                        <td>5. </td>
-                    </tr>
-                    <tr>
-                        <td>MASA :</td>
-                        <td>{{ Carbon\Carbon::parse($record->start_date)->format('H:i A') }}</td>
-                        <td>6. : </td>
+                        <td valign="top">
+                            <strong>Nama Penumpang Tambahan : </strong><br />
+                            <ol type="1">
+                            @foreach($record->passengers as $passenger)
+                                <li>{{ $passenger->name }}</li>
+                            @endforeach
+                            </ol>
+                        </td>
                     </tr>
                 </table>              
             </td>
         </tr>
         <tr>
             <td>
-                DESTINASI / URUSAN : {{ $record->destination }}
+                <br />
+                <strong>DESTINASI / URUSAN : </strong>{{ $record->destination }}
+                <br /><br />
             </td>
         </tr>
         <tr>
-            <td>JENIS KENDERAAN DIPOHON : {{ $record->cartype->name }}</td>
+            <td>
+                <br />
+                <strong>JENIS KENDERAAN DIPOHON : </strong>{{ $record->cartype->name }}
+                <br /><br />
+            </td>
         </tr>
         <tr>
-            <td align="center"><strong>PENGESAHAN KETUA SEKSYEN / CAWANGAN / BAHAGIAN</strong></td>
+            <td align="center">
+                <strong>PENGESAHAN KETUA SEKSYEN / CAWANGAN / BAHAGIAN</strong>
+            </td>
         </tr>
         <tr>
             <td>
+                <br />
                 Pengesahan Pengarah Bahagian / Ketua Cawangan / Ketua Seksyen <br /><br />
                 <strong>Nama Pengesah :</strong> {{ $record->approval->user->name }}  - {{ $record->approval->user->staff->gred->info_gred }} <br /><br />
 
@@ -103,27 +94,29 @@
         </tr>
         <tr>
             <td>
-                <table>
+                <table class="mt-2 ml-2">
                     <tr>
-                        <td></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td>LULUS</td>
                     </tr>
                     <tr>
-                        <td></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td>TIDAK LULUS</td>
                     </tr>                   
                 </table>
                 <br />
-                Nama Pemandu : {{ $record->driver->name }} <br />
-                No Telefon : {{ $record->driver->staff->no_tel }} <br />
-                Ulasan : .........................
+                <strong>Nama Pemandu : </strong>{{ $record->driver->name }} <br />
+                <strong>No Telefon : </strong>{{ $record->driver->staff->no_tel }} <br />
+                <strong>Ulasan :</strong>.........................
             </td>
         </tr>
-
-
     </table>
-
-           
+    <strong>Nota Pengguna : </strong><br />
+    <ul type="bullet">
+        <li>Sila berada di kenderaan pada waktu yang dimohon</li>
+        <li>Hubungi pemandu jika ada sebarang perubahan masa</li>
+        <li>Perjalanan kenderaan adalah seperti yang dimohon sahaja</li>
+    </ul> 
     
 </body>
 </html>

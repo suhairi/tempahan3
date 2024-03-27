@@ -11,7 +11,7 @@ class Approval extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'status'];
+    protected $fillable = ['user_id', 'status', 'token'];
 
     // protected $casts = [
     //     'status' => 'boolean',

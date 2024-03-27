@@ -27,11 +27,6 @@ class Driver extends Model
         return $this->hasMany(Vehicle::class);
     }
 
-    public function name(): Attribute
-    {
-        get: fn($value) => strtoupper($value);
-    }
-
     public function staff(): BelongsTo
     {
         return $this->belongsTo(Staff::class, 'staffid');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\PdfController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,7 @@ Route::get('/login', function () {
 Route::middleware(['web'])->group(function() {
 
     Route::get('/pdf/bookings/vehicle/{id}', [PdfController::class, 'getVehicleBookingForm'])->name('pdf.bookings.vehicle.index');
+
+    Route::get('/approval/{token}', [ApprovalController::class, 'approves'])->name('approval');
+    Route::get('approval/resend/token/{id}', [ApprovalController::class, 'resend'])->name('resend_approval_link');
 });

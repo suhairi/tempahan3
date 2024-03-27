@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id'); // approver
             $table->boolean('status')->default(false); // approve or disapprove or pending
+            $table->string('token')->unique();
             $table->timestamps();
         });
     }

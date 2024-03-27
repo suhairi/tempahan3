@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Jawatan extends Model
+class Jawatan2 extends Model
 {
     use HasFactory;
+
+    protected $connection = 'mysql_2';
+    protected $table = 'jawatan';
+    protected $primaryKey = 'kod_jawatan';
 
     protected $fillable = ['kod_jawatan', 'info_jawatan'];
 
