@@ -15,6 +15,8 @@ class PdfController extends Controller
         $record = Vehiclebooking::findOrFail($id);
 
         // dd($record->staff->jawatan->info_jawatan . ' - ' . $record->staff->gred->info_gred);
+        // dd($record->approval->user->name . ' - ' . $record->approval->user->staff->gred->info_gred);
+        // dd($record->driver->staff->no_tel);
 
         // dd($record->passengers()->first());
 

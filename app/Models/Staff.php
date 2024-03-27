@@ -38,8 +38,6 @@ class Staff extends Model
         return $this->belongsTo(Grade::class, 'kod_jawatan_semasa');
     }
 
-    
-
     public function passenger(): HasMany
     {
         return $this->hasMany(Passenger::class);
@@ -53,6 +51,11 @@ class Staff extends Model
     public function bahagian(): BelongsTo
     {
         return $this->belongsTo(Bahagian2::class, 'kod_bhgn_semasa');
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
     }
 
 }

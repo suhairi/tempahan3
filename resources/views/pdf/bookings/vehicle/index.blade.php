@@ -11,7 +11,7 @@
 <body>
     <table border="1">
         <tr>
-            <td align="center"><img src="{{ asset('images/logo.png') }}" height="120" width="120"></td>
+            <td align="center"><img src="{{ asset('images/logo.png') }}" height="120" width="120" class="mt-2 mb-2"></td>
         </tr>
         <tr>
             <td><strong>PERMOHONAN MENGGUNA KENDERAAN JABATAN / PEMANDU <br /> DI IBU PEJABAT MADA</td>
@@ -55,7 +55,7 @@
                     </tr>
                     <tr>
                         <td>TARIKH MOHON :</td>
-                        <td>{{ Carbon\Carbon::parse($record->created_at)->format('d-m-Y H:i') }}</td>
+                        <td>{{ Carbon\Carbon::parse($record->created_at)->format('d-m-Y H:i A') }}</td>
                         <td>3. </td>
                     </tr>
                     <tr>
@@ -73,7 +73,7 @@
                     </tr>
                     <tr>
                         <td>MASA :</td>
-                        <td>{{ $record->name }}</td>
+                        <td>{{ Carbon\Carbon::parse($record->start_date)->format('H:i A') }}</td>
                         <td>6. : </td>
                     </tr>
                 </table>              
@@ -87,6 +87,39 @@
         <tr>
             <td>JENIS KENDERAAN DIPOHON : {{ $record->cartype->name }}</td>
         </tr>
+        <tr>
+            <td align="center"><strong>PENGESAHAN KETUA SEKSYEN / CAWANGAN / BAHAGIAN</strong></td>
+        </tr>
+        <tr>
+            <td>
+                Pengesahan Pengarah Bahagian / Ketua Cawangan / Ketua Seksyen <br /><br />
+                <strong>Nama Pengesah :</strong> {{ $record->approval->user->name }}  - {{ $record->approval->user->staff->gred->info_gred }} <br /><br />
+
+                <small>**Ini adalah cetakan komputer, tandatangan tidak diperlukan.</small>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>UNTUK KEGUNAAN UNIT LOGISTIK</strong></td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td></td>
+                        <td>LULUS</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>TIDAK LULUS</td>
+                    </tr>                   
+                </table>
+                <br />
+                Nama Pemandu : {{ $record->driver->name }} <br />
+                No Telefon : {{ $record->driver->staff->no_tel }} <br />
+                Ulasan : .........................
+            </td>
+        </tr>
+
 
     </table>
 
