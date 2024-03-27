@@ -28,6 +28,11 @@ class Vehiclebooking extends Model
         'driver_id',
     ];
 
+    public function staff(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class, 'staffid');
+    }
+
     public function passengers(): HasMany
     {
         return $this->hasMany(Passenger::class);

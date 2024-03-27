@@ -10,10 +10,11 @@ class Grade extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'group_id'];
+    protected $connection = 'mysql_2';
+    protected $table = 'gred';
+    protected $primaryKey = 'kod_gred';
 
-    public function group(): BelongsTo
-    {
-        $this->belongsTo(Group::class);
-    }
+    protected $fillable = ['kod_gred', 'info_gred', 'kod_jawatan', 'kod_kump'];
+
+ 
 }

@@ -9,83 +9,88 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </head>
 <body>
-
-    <div class="m-4">
-
-        <h1>Details Vehicle Booking Form</h1>
-
-        <br />
-        <div><p><strong>Status :</strong> {{ $record->progress }}</p></div>
-        <table class="table table-bordered table-dark table-sm">
-            <tr>
-                <td colspan="2"><strong>Applicant Info</strong></td>
-            </tr>
-            <tr>
-                <td width="20%"><strong>Applicant Name</strong></td>
-                <td>{{ $record->staffid }} - {{ $record->name }} </td>
-            </tr>
-            <tr>
-                <td><strong>Approver / Supervisor</strong></td>
-                <td>{{ $record->approval->user->staffid }} - {{ $record->approval->user->name }}</td>
-            </tr>
-        </table>
-            
-        <table class="table table-bordered table-sm bg">
-            <tr>
-                <td colspan="2"><strong>Event & Booking Info</strong></td>
-            </tr>
-            <tr>
-                <td width="20%"><strong>Booking Start Date</strong></td>
-                <td>{{ $record->start_date }} - {{ Carbon\Carbon::parse($record->start_date)->locale('en')->dayName }}</td>
-            </tr>
-            <tr>
-                <td><strong>Event Start Date</strong></td>
-                <td>{{ $record->start_event_date }} - {{ Carbon\Carbon::parse($record->start_event_date)->locale('en')->dayName }}</td>
-            </tr>
-            
-            <tr>
-                <td><strong>End Date</strong></td>
-                <td>{{ $record->end_date }} - {{ Carbon\Carbon::parse($record->end_date)->locale('en')->dayName }}</td>
-            </tr>
-            <tr>
-                <td><strong>Event Location</strong></td>
-                <td>{{ $record->destination }}</td>
-            </tr>
-        </table>
-        
-        <table class="table table-bordered table-sm bg">
-            <tr>
-                <td colspan="2"><strong>Vehicle and Driver Info</strong></td>
-            </tr>
-            <tr>
-                <td width="20%"><strong>Request Driver Name</strong></td>
-                <td>{{ $record->driver->staffid }} - {{ $record->driver->name }}</td>
-            </tr>
-            <tr>
-                <td><strong>Request Vehicle Type</strong></td>
-                <td>{{ $record->cartype->name }}</td>
-            </tr>
-        </table>
-        <table class="table table-bordered table-sm bg">
-            <tr>
-                <td colspan="2"><strong>Passengers Info</strong></td>
-            </tr>
-            @if(empty($record->passengers()->first()))
-            <tr>
-                <td>*No passenger.</td>
-            </tr>
-            @else
-                @foreach($record->passengers()->get() as $passenger)
+    <table border="1">
+        <tr>
+            <td align="center"><img src="{{ asset('images/logo.png') }}" height="120" width="120"></td>
+        </tr>
+        <tr>
+            <td><strong>PERMOHONAN MENGGUNA KENDERAAN JABATAN / PEMANDU <br /> DI IBU PEJABAT MADA</td>
+        </tr>
+        <tr>
+            <td>
+                Permohonanmenggunakankenderaanjabatansebelum / semasa / selepaswaktupejabathendaklahmengisibutir-butir di ruangan yang <br />
+                telah dikhaskan dalam borang ini.<br />
+                <ol type="i">
+                    <li>Permohonan ini wajib dihantar menggunakan Borang Tempahan Kenderaan beserta SURAT PROGRAM/AKTIVITI  dari pihak yang berkenaan.</li>
+                    <li>Permohonan mestilah diserahkan ke Unit logistik, Cawangan Pentadbiran, Bahagian Khidmat Pengurusan selewat-lewatnya SATU (1)<br />
+                        HARI sebelum tarikh penggunaan</li>
+                    <li>Semua permohonan HENDAKLAH disahkan melalui Pengarah Bahagian / Ketua Cawangan / Ketua Seksyen</li>
+                    <li>Permohonan akan dipertimbangkan tertakluk kepada kekosongan kenderaan dan juga pemandu.</li>
+                    <li>Tempahan akan TERBATAL dengan sendirinya sekiranya pemohon tidak tiba dalam masa 30 minit dari masa yang dimohon.</li>
+                    <li>Sila rujuk Peraturan-Peraturan Penggunaan Kenderaan MADA di mukasurat sebelah.</li>
+                    <li>Borang Permohonan ini boleh didapati di Cawangan Pentadbiran Ibu Pejabat MADA atau Sistem GOE MADA.</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td align="center"><strong>PEMOHON</strong></td>
+        </tr>
+        <tr>
+            <td>
+                <table width="100%">
                     <tr>
-                        <td width="20%"><strong>Name #{{ $loop->iteration }}</strong></td>
-                        <td>{{ $passenger->staffid}} - {{ $passenger->name }}</td>
+                        <td>NAMA :</td>
+                        <td>{{ $record->name }}</td>
+                        <td>NAMA PENUMPANG TAMBAHAN : </td>
                     </tr>
-                @endforeach
-            @endif
-        </table>
-        
-    </div>
-    
+                    <tr>
+                        <td>UNIT/BAHAGIAN :</td>
+                        <td>{{ $record->staff->bahagian->singkatan }}</td>
+                        <td>1. </td>
+                    </tr>
+                    <tr>
+                        <td>JAWATAN :</td>
+                        <td>{{ $record->staff->jawatan->info_jawatan . ' - ' . $record->staff->gred->info_gred }}</td>
+                        <td>2. </td>
+                    </tr>
+                    <tr>
+                        <td>TARIKH MOHON :</td>
+                        <td>{{ Carbon\Carbon::parse($record->created_at)->format('d-m-Y H:i') }}</td>
+                        <td>3. </td>
+                    </tr>
+                    <tr>
+                        <td>NO HP & SAMB :</td>
+                        <td>
+                            No HP : {{ $record->no_tel }} <br />
+                            No Samb : {{ $record->connection }}
+                        </td>
+                        <td>4. </td>
+                    </tr>
+                    <tr>
+                        <td>TARIKH GUNA :</td>
+                        <td>{{ Carbon\Carbon::parse($record->start_date)->format('d-m-Y') }}</td>
+                        <td>5. </td>
+                    </tr>
+                    <tr>
+                        <td>MASA :</td>
+                        <td>{{ $record->name }}</td>
+                        <td>6. : </td>
+                    </tr>
+                </table>              
+            </td>
+        </tr>
+        <tr>
+            <td>
+                DESTINASI / URUSAN : {{ $record->destination }}
+            </td>
+        </tr>
+        <tr>
+            <td>JENIS KENDERAAN DIPOHON : {{ $record->cartype->name }}</td>
+        </tr>
+
+    </table>
+
+           
     
 </body>
 </html>

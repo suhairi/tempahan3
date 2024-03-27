@@ -26,9 +26,9 @@ class DatabaseSeeder extends Seeder
 
             JawatanSeeder::class,
             GroupSeeder::class,
-            GradeSeeder::class,
-            BahagianSeeder::class,
-            CawanganSeeder::class,
+            // GradeSeeder::class,
+            // BahagianSeeder::class,
+            // CawanganSeeder::class,
             SeksyenSeeder::class,
             StatusSeeder::class,
             GelaranSeeder::class,

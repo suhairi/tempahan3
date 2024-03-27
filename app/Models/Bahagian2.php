@@ -4,19 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Bahagian extends Model
+class Bahagian2 extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'singkatan'];
+    protected $connection = 'mysql_2';
+    protected $table = 'bahagian';
+    protected $primaryKey = 'kod_bhgn';
 
-    public function drivers(): HasMany
-    {
-        return $this->hasMany(Driver::class);
-    }
+    protected $fillable = ['kod_bghn', 'info_bhgn', 'singkatan'];
 
     public function staff(): HasOne
     {

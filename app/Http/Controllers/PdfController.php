@@ -14,6 +14,8 @@ class PdfController extends Controller
     {
         $record = Vehiclebooking::findOrFail($id);
 
+        // dd($record->staff->jawatan->info_jawatan . ' - ' . $record->staff->gred->info_gred);
+
         // dd($record->passengers()->first());
 
         $pdf =  PDF::loadView('pdf.bookings.vehicle.index', ['record' => $record])

@@ -145,7 +145,7 @@ class VehiclebookingResource extends Resource
                         ->preload()
                         ->required(),                 
                     Select::make('cartype_id')
-                        ->label('Request Vehicle Type')
+                        ->label('Request Vehicle Type...')
                         ->relationship('cartype', 'name', fn(Builder $query) => $query->orderBy('id', 'asc'))
                         ->default(1)
                         ->required(),                   
