@@ -119,9 +119,9 @@ class ApprovalResource extends Resource
             ->actions([
                 // Tables\Actions\EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
-                Action::make('Resend Approval Link')
-                    ->url(fn(Approval $approval) => route('resend_approval_link', $approval))
-                    ->openUrlInNewTab(),
+                // Action::make('Resend Approval Link')
+                //     ->url(fn(Approval $approval) => route('resend_approval_link', $approval))
+                //     ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

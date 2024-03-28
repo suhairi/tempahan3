@@ -10,6 +10,7 @@ use App\Models\Staff;
 use App\Models\User;
 use App\Models\Vehiclebooking;
 use Filament\Actions;
+use Filament\Notifications\DatabaseNotification;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Mail;
@@ -77,17 +78,17 @@ class CreateVehiclebooking extends CreateRecord
     {
         // Runs after the form fields are saved to the database.
         // Create passenger data
-        $vehiclebooking_id = $this->record->id;
-        // dd($this->data['passengers']);
-        foreach($this->data['passengers'] as $passenger)
-        {
-            $staffName = Staff::where('staff_id', $passenger['passenger_staffid'])->first()->nama;
-            Passenger::create([
-                'staffid'   => $passenger['passenger_staffid'],
-                'name'      => $staffName,
-                'vehiclebooking_id' => $vehiclebooking_id,
-            ]);
-        }
+        // $vehiclebooking_id = $this->record->id;
+        // // dd($this->data['passengers']);
+        // foreach($this->data['passengers'] as $passenger)
+        // {
+        //     $staffName = Staff::where('staff_id', $passenger['passenger_staffid'])->first()->nama;
+        //     Passenger::create([
+        //         'staffid'   => $passenger['passenger_staffid'],
+        //         'name'      => $staffName,
+        //         'vehiclebooking_id' => $vehiclebooking_id,
+        //     ]);
+        // }
 
         // update vehiclebooking->approval_id
         $this->record->approval_id = $this->data['approval_id'];
@@ -97,6 +98,12 @@ class CreateVehiclebooking extends CreateRecord
 
     protected function beforeFill(): void
     {
+        // Notify Super Admin that this form is filled by clerk only
+        Notification::make()
+            ->title('This action is for clerk only. This section is enable for reviewing and testing only. Submit is forbidden.')
+            ->danger()
+            ->send();
+
         // 1 - Check Approval that has no Vehiclebooking, and delete them
         $approvals = Approval::all();
         foreach($approvals as $approval)

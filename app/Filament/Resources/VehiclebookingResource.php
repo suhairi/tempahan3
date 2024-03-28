@@ -104,7 +104,9 @@ class VehiclebookingResource extends Resource
                                     'Penang'    => 'Penang',
                                     'Perak'     => 'Perak',
                                     'Selangor'  => 'Selangor',
-                                ])->columnSpanFull(),
+                                ])
+                                ->required()
+                                ->columnSpanFull(),
                             DateTimePicker::make('start_event_date')
                                 ->label('Event Start Date')
                                 ->minDate(now())
@@ -143,13 +145,13 @@ class VehiclebookingResource extends Resource
                         ->searchable()
                         ->preload(),                    
                     Select::make('driver_id')
-                        ->label('Requesting Driver...')
+                        ->label(fn(Page $livewire) => $livewire instanceof EditRecord ? '**Requesting Driver' : 'Requesting Driver')
                         ->relationship('driver', 'name', fn(Builder $query) => $query->where('type', 'Bebas')->orderBy('name', 'asc'))
                         ->searchable()
                         ->preload()
                         ->required(),                 
                     Select::make('cartype_id')
-                        ->label('Request Vehicle Type...')
+                        ->label(fn(Page $livewire) => $livewire instanceof EditRecord ? '**Requesting Vehicle Type' : 'Requesting Vehicle Type')
                         ->relationship('cartype', 'name', fn(Builder $query) => $query->orderBy('id', 'asc'))
                         ->default(1)
                         ->required(),                   
@@ -162,11 +164,10 @@ class VehiclebookingResource extends Resource
                         Repeater::make('passengers')
                             ->label('Passenger Info')
                             ->schema([
-                                Select::make('passenger_staffid')
+                                Select::make('passengers')
                                     ->relationship('passengers.staff', 'nama')
                                     ->searchable()
                                     ->preload(),
-
                         ])->maxItems(3),
                     ]),
                 

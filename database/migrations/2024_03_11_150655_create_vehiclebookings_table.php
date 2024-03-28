@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('destination'); // negeri acara tersebut
 
             $table->string('attachment')->nullable();
+            $table->text('passengers');
 
             $table->string('progress'); // new, processing, success, cancel
 

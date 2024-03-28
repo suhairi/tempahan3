@@ -22,6 +22,7 @@ class Vehiclebooking extends Model
         'attachment',
         'destination',
         'approver_id',
+        'passengers',
         'progress',
         'clerk_id',
         'cartype_id',
@@ -37,6 +38,13 @@ class Vehiclebooking extends Model
     public function passengers(): HasMany
     {
         return $this->hasMany(Passenger::class);
+    }
+
+    public function casts(): array
+    {
+        return [
+            'passengers' => 'array',
+        ];
     }
 
     public function approver(): BelongsTo
@@ -63,9 +71,6 @@ class Vehiclebooking extends Model
     {
         return $this->belongsTo(Driver::class);
     }
-
-
-
 
 
 }

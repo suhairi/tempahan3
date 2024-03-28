@@ -28,5 +28,5 @@ Route::middleware(['web'])->group(function() {
     Route::get('/pdf/bookings/vehicle/{id}', [PdfController::class, 'getVehicleBookingForm'])->name('pdf.bookings.vehicle.index');
 
     Route::get('/approval/{token}', [ApprovalController::class, 'approves'])->name('approval');
-    Route::get('approval/resend/token/{id}', [ApprovalController::class, 'resend'])->name('resend_approval_link');
+    // Route::get('approval/resend/token/{id}', [ApprovalController::class, 'resend'])->name('resend_approval_link');
 });
