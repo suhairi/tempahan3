@@ -17,6 +17,7 @@ class PdfController extends Controller
     {
         $record = Vehiclebooking::findOrFail($id);
 
+        // Disable download pdf in the form not approved.
         if($record->approval->status == 0)
         {
             Notification::make()
@@ -26,6 +27,11 @@ class PdfController extends Controller
             
             return redirect()->back();
         }
+
+        // Update progress in table of vehiclebookings of approved form to Done
+        // Done - meaning that, this form has been taken all necessary actions.
+        $record->progress = 'Done';
+        $record->save();
 
         $passengers = [];
         foreach($record->passengers as $passenger)

@@ -179,11 +179,13 @@ class VehiclebookingResource extends Resource
         return $table
             ->columns([
                 BadgeColumn::make('progress')
-                    ->color(static function($state): string {
+                    ->color(function($state): string {
                         if($state == 'New')
                             return 'success';
-                        else    
+                        else if($state == 'Approved')
                             return 'primary';
+                        else
+                            return 'gray';
                     })
                     ->searchable(),
                 TextColumn::make('name')
